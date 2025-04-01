@@ -1,6 +1,7 @@
 'use client';
 
 import { useWalletStore } from '@/store/walletStore';
+import MockApyChart from '@/components/investor/MockApyChart';
 
 export default function InvestorPage() {
   const { isConnected } = useWalletStore();
@@ -52,6 +53,9 @@ export default function InvestorPage() {
             </div>
           </div>
         </div>
+
+        {/* APY Chart */}
+        <MockApyChart />
 
         {/* Actions Section */}
         <div className="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
