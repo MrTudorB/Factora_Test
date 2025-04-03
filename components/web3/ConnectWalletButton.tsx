@@ -10,17 +10,25 @@ import {
   Address,
   Identity,
 } from '@coinbase/onchainkit/identity';
-import { useAccount } from 'wagmi';
+import { useAccount, useChains, useChainId } from 'wagmi';
 import { useWalletStore } from '@/store/walletStore';
 import { useEffect } from 'react';
 
 export default function ConnectWalletButton() {
   const { address } = useAccount();
   const { setAddress, setIsConnected } = useWalletStore();
+  const chains = useChains();
+  const chainId = useChainId();
+  const currentChain = chains.find(chain => chain.id === chainId);
 
   useEffect(() => {
-    setAddress(address);
-    setIsConnected(!!address);
+    if (address) {
+      setAddress(address);
+      setIsConnected(true);
+    } else {
+      setAddress('');
+      setIsConnected(false);
+    }
   }, [address, setAddress, setIsConnected]);
 
   const truncateAddress = (addr: string) => {
@@ -53,6 +61,15 @@ export default function ConnectWalletButton() {
                 <Identity address={address} className="text-gray-900 font-mono">
                   <Address address={address} className="text-gray-900" />
                 </Identity>
+              </div>
+              <div className="mt-3">
+                <p className="text-sm font-medium text-gray-900">Network</p>
+                <div className="mt-1 px-3 py-2 text-sm bg-gray-50 rounded-md">
+                  <span className="font-mono text-gray-900">
+                    {currentChain?.name || 'Not Connected'} 
+                    {currentChain?.id && ` (${currentChain.id})`}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="py-1">
